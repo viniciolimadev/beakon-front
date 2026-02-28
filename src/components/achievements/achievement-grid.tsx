@@ -38,15 +38,15 @@ export function AchievementGrid() {
   return (
     <div className="space-y-4">
       {/* Filter tabs */}
-      <div className="flex items-center gap-1 bg-muted rounded-lg p-1 w-fit">
+      <div className="flex items-center gap-0.5 bg-surface rounded-lg p-1 w-fit border border-border">
         {(["all", "unlocked", "locked"] as Filter[]).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
             className={cn(
-              "text-xs px-3 py-1.5 rounded font-medium transition-colors",
+              "text-xs px-3 py-1.5 rounded-md font-medium transition-all duration-200",
               filter === f
-                ? "bg-background text-foreground shadow-sm"
+                ? "bg-surface-elevated text-foreground shadow-sm border border-border"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -56,20 +56,24 @@ export function AchievementGrid() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="flex flex-col items-center gap-2 py-12 text-center">
-          <Trophy className="h-10 w-10 text-muted-foreground/30" />
-          <p className="text-sm font-medium text-muted-foreground">
-            {filter === "unlocked"
-              ? "Nenhuma conquista desbloqueada ainda."
-              : filter === "locked"
-              ? "Todas as conquistas foram desbloqueadas! 🎉"
-              : "Sua jornada começa com a primeira tarefa."}
-          </p>
-          {filter === "all" && (
-            <p className="text-xs text-muted-foreground/60">
-              Complete tarefas e sessões Pomodoro para ganhar conquistas.
+        <div className="flex flex-col items-center gap-3 py-14 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-elevated">
+            <Trophy className="h-6 w-6 text-muted-foreground/40" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-foreground">
+              {filter === "unlocked"
+                ? "Nenhuma conquista desbloqueada ainda."
+                : filter === "locked"
+                ? "Todas as conquistas foram desbloqueadas! 🎉"
+                : "Sua jornada começa com a primeira tarefa."}
             </p>
-          )}
+            {filter === "all" && (
+              <p className="text-xs text-muted-foreground">
+                Complete tarefas e sessões Pomodoro para ganhar conquistas.
+              </p>
+            )}
+          </div>
         </div>
       )}
 
@@ -89,15 +93,19 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
   return (
     <div
       className={cn(
-        "rounded-lg border bg-card p-4 space-y-3 transition-opacity",
-        !isUnlocked && "opacity-60"
+        "rounded-xl border p-4 space-y-3 transition-all duration-200",
+        isUnlocked
+          ? "bg-surface border-warning/30 shadow-glow-warning hover:border-warning/50 hover:-translate-y-0.5"
+          : "bg-surface border-border opacity-60"
       )}
     >
       <div className="flex items-start gap-3">
         <div
           className={cn(
             "h-10 w-10 rounded-full flex items-center justify-center shrink-0 text-lg",
-            isUnlocked ? "bg-warning/10" : "bg-muted"
+            isUnlocked
+              ? "bg-warning/15 ring-2 ring-warning/20"
+              : "bg-surface-elevated"
           )}
         >
           {isUnlocked ? (
@@ -120,10 +128,10 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
 
       {/* Progress */}
       <div className="space-y-1">
-        <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+        <div className="h-1.5 w-full rounded-full bg-surface-elevated overflow-hidden">
           <div
             className={cn(
-              "h-full rounded-full transition-all",
+              "h-full rounded-full transition-all duration-500",
               isUnlocked ? "bg-warning" : "bg-primary/50"
             )}
             style={{ width: `${progress}%` }}
@@ -134,7 +142,7 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
             {achievement.progress}/{achievement.target}
           </span>
           {isUnlocked ? (
-            <span className="text-warning">
+            <span className="text-warning font-medium">
               +{achievement.xpReward} XP
             </span>
           ) : (

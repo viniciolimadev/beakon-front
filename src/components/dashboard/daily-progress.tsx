@@ -15,30 +15,34 @@ export function DailyProgress() {
   const allDone = total > 0 && completed === total;
 
   return (
-    <div className="space-y-2">
+    <div className="rounded-xl border border-border bg-surface px-4 py-3 space-y-2.5">
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">
           {completed} de {total} tarefas concluídas
         </span>
         <span
           className={
-            allDone ? "font-semibold text-success" : "text-muted-foreground"
+            allDone ? "font-semibold text-success" : "font-medium text-foreground"
           }
         >
           {percentage}%
         </span>
       </div>
 
-      <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+      <div className="h-2 w-full rounded-full bg-surface-elevated overflow-hidden">
         <div
-          className="h-full rounded-full bg-primary transition-all duration-500"
+          className={
+            allDone
+              ? "h-full rounded-full bg-success transition-all duration-500"
+              : "h-full rounded-full bg-xp-gradient transition-all duration-500"
+          }
           style={{ width: `${percentage}%` }}
         />
       </div>
 
       {allDone && (
-        <p className="text-xs text-success text-center pt-1">
-          Todas as tarefas de hoje concluídas! Incrível!
+        <p className="text-xs text-success text-center">
+          🎉 Todas as tarefas concluídas!
         </p>
       )}
     </div>

@@ -18,19 +18,27 @@ export function StreakCalendar() {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className="rounded-lg border border-border bg-card px-6 py-4 space-y-4">
+    <div className="rounded-xl border border-border bg-surface px-5 py-4 space-y-4">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Flame className="h-5 w-5 text-danger" />
-          <span className="font-semibold text-lg">{streakDays} dias</span>
-          <span className="text-sm text-muted-foreground">seguidos</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-danger/10">
+            <Flame className="h-4 w-4 text-danger" />
+          </div>
+          <div>
+            <p className="text-base font-semibold">
+              <span className="font-mono tabular-nums">{streakDays}</span> dias seguidos
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Recorde:{" "}
+              <span className="text-foreground font-medium font-mono">{streakRecord}</span> dias
+            </p>
+          </div>
         </div>
-        <span className="text-xs text-muted-foreground">
-          Recorde: <span className="text-foreground font-medium">{streakRecord} dias</span>
-        </span>
+        <span className="text-xs text-muted-foreground">últimos 30 dias</span>
       </div>
 
-      {/* 30-day grid */}
+      {/* 30-day heatmap grid */}
       <div className="grid grid-cols-10 gap-1.5" suppressHydrationWarning>
         {days.map((day) => {
           const isActive = activeSet.has(day);
@@ -42,23 +50,28 @@ export function StreakCalendar() {
               className={cn(
                 "aspect-square rounded-sm transition-colors",
                 isActive
-                  ? "bg-success"
+                  ? "bg-success shadow-[0_0_6px_rgba(34,197,94,0.4)]"
                   : isToday
-                  ? "bg-muted border border-border"
-                  : "bg-muted/40"
+                  ? "bg-surface-elevated border-2 border-primary/40"
+                  : "bg-surface-elevated/60"
               )}
             />
           );
         })}
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
+      {/* Legend */}
+      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-sm bg-success inline-block" />
           Dia ativo
         </span>
-        <span className="flex items-center gap-1">
-          <span className="h-2.5 w-2.5 rounded-sm bg-muted/40 inline-block" />
+        <span className="flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-sm border-2 border-primary/40 bg-surface-elevated inline-block" />
+          Hoje
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-sm bg-surface-elevated/60 inline-block" />
           Inativo
         </span>
       </div>
