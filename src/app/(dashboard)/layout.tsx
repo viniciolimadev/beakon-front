@@ -1,3 +1,7 @@
+import { Sidebar } from "@/components/layout/sidebar";
+import { Header } from "@/components/layout/header";
+import { QuickCapture } from "@/components/layout/quick-capture";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -5,13 +9,12 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar — US-F10 */}
-      <aside className="w-64 shrink-0 bg-surface border-r border-border" />
+      <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header — US-F11 */}
-        <header className="h-16 shrink-0 border-b border-border bg-surface" />
+        <Header />
         <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
+      <QuickCapture />
     </div>
   );
 }
