@@ -5,6 +5,7 @@ import {
   PomodoroMode,
   DEFAULT_POMODORO_CONFIG,
 } from "@/types/pomodoro";
+import api from "@/services/api";
 
 interface PomodoroState {
   session: PomodoroSession | null;
@@ -15,7 +16,8 @@ interface PomodoroState {
   mode: PomodoroMode;
   config: PomodoroConfig;
   todaySessions: PomodoroSession[];
-  start: (taskId?: string) => Promise<void>;
+  start: (taskId?: string, taskTitle?: string) => Promise<void>;
+  startBreak: () => void;
   pause: () => void;
   resume: () => void;
   finish: (completed: boolean) => Promise<void>;
@@ -33,31 +35,82 @@ function getModeSeconds(mode: PomodoroMode, config: PomodoroConfig): number {
   return map[mode];
 }
 
+function loadConfig(): PomodoroConfig {
+  if (typeof window === "undefined") return DEFAULT_POMODORO_CONFIG;
+  try {
+    const stored = localStorage.getItem("pomodoroConfig");
+    return stored
+      ? { ...DEFAULT_POMODORO_CONFIG, ...JSON.parse(stored) }
+      : DEFAULT_POMODORO_CONFIG;
+  } catch {
+    return DEFAULT_POMODORO_CONFIG;
+  }
+}
+
+const initialConfig = loadConfig();
+
 export const usePomodoroStore = create<PomodoroState>((set, get) => ({
   session: null,
   isRunning: false,
   isPaused: false,
-  timeRemaining: DEFAULT_POMODORO_CONFIG.focusMinutes * 60,
+  timeRemaining: initialConfig.focusMinutes * 60,
   cyclesCompleted: 0,
   mode: "focus",
-  config: DEFAULT_POMODORO_CONFIG,
+  config: initialConfig,
   todaySessions: [],
 
-  start: async (taskId) => {
+  start: async (taskId?: string, taskTitle?: string) => {
     const { config } = get();
-    // TODO: chamar POST /api/pomodoro/start em US-F31
-    set({
-      isRunning: true,
-      isPaused: false,
-      mode: "focus",
-      timeRemaining: config.focusMinutes * 60,
-      session: {
-        id: crypto.randomUUID(),
+    try {
+      const res = await api.post<{ id: string }>("/api/pomodoro/start", {
         taskId,
         durationMinutes: config.focusMinutes,
-        completed: false,
-        startedAt: new Date().toISOString(),
-      },
+      });
+      set({
+        isRunning: true,
+        isPaused: false,
+        mode: "focus",
+        timeRemaining: config.focusMinutes * 60,
+        session: {
+          id: res.data.id,
+          taskId,
+          taskTitle,
+          durationMinutes: config.focusMinutes,
+          completed: false,
+          startedAt: new Date().toISOString(),
+        },
+      });
+    } catch {
+      // fallback: use local ID when API is unavailable
+      set({
+        isRunning: true,
+        isPaused: false,
+        mode: "focus",
+        timeRemaining: config.focusMinutes * 60,
+        session: {
+          id: crypto.randomUUID(),
+          taskId,
+          taskTitle,
+          durationMinutes: config.focusMinutes,
+          completed: false,
+          startedAt: new Date().toISOString(),
+        },
+      });
+    }
+  },
+
+  startBreak: () => {
+    const { cyclesCompleted, config } = get();
+    const isLongBreak =
+      (cyclesCompleted % config.cyclesUntilLongBreak === 0) &&
+      cyclesCompleted > 0;
+    const breakMode: PomodoroMode = isLongBreak ? "long_break" : "short_break";
+    set({
+      mode: breakMode,
+      timeRemaining: getModeSeconds(breakMode, config),
+      isRunning: true,
+      isPaused: false,
+      session: null,
     });
   },
 
@@ -65,8 +118,8 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => ({
 
   resume: () => set({ isRunning: true, isPaused: false }),
 
-  finish: async (completed) => {
-    const { session, cyclesCompleted, config, todaySessions } = get();
+  finish: async (completed: boolean) => {
+    const { session, cyclesCompleted, todaySessions } = get();
     if (!session) return;
 
     const finished: PomodoroSession = {
@@ -75,7 +128,12 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => ({
       finishedAt: new Date().toISOString(),
     };
 
-    // TODO: chamar PATCH /api/pomodoro/{id}/finish em US-F31
+    try {
+      await api.patch(`/api/pomodoro/${session.id}/finish`, { completed });
+    } catch {
+      // continue locally even if API fails
+    }
+
     set({
       session: null,
       isRunning: false,
@@ -92,15 +150,13 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => ({
   },
 
   nextMode: () => {
-    const { cyclesCompleted, config } = get();
-    const isLongBreak =
-      (cyclesCompleted + 1) % config.cyclesUntilLongBreak === 0;
-    const nextMode: PomodoroMode = isLongBreak ? "long_break" : "short_break";
+    const { config } = get();
     set({
-      mode: nextMode,
-      timeRemaining: getModeSeconds(nextMode, config),
+      mode: "focus",
+      timeRemaining: getModeSeconds("focus", config),
       isRunning: false,
       isPaused: false,
+      session: null,
     });
   },
 
