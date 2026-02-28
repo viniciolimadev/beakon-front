@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Core layout ─────────────────────────────────────────────── */
+    --background: 215 28% 7%;
+    --foreground: 214 32% 91%;
+
+    /* ── Surface hierarchy ───────────────────────────────────────── */
+    --surface: 217 33% 12%;
+    --surface-elevated: 217 33% 17%;
+
+    /* ── Card (Shadcn compat) ────────────────────────────────────── */
+    --card: 217 33% 12%;
+    --card-foreground: 214 32% 91%;
+    --popover: 217 33% 12%;
+    --popover-foreground: 214 32% 91%;
+
+    /* ── Text hierarchy ──────────────────────────────────────────── */
+    --text-primary: 214 32% 91%;
+    --text-secondary: 214 25% 75%;
+    --text-muted: 215 20% 55%;
+
+    /* Shadcn compat */
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 55%;
+
+    /* ── Brand ───────────────────────────────────────────────────── */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* ── Secondary / accent ──────────────────────────────────────── */
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 214 32% 91%;
+    --accent: 217 33% 20%;
+    --accent-foreground: 214 32% 91%;
+
+    /* ── Semantic ────────────────────────────────────────────────── */
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+
+    /* Shadcn compat */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* ── Borders ─────────────────────────────────────────────────── */
+    --border: 215 25% 22%;
+    --border-accent: 217 91% 60%;
+    --input: 215 25% 22%;
+    --ring: 217 91% 60%;
+
+    /* ── Radius ──────────────────────────────────────────────────── */
+    --radius: 0.625rem;
+
+    /* ── Gradients ───────────────────────────────────────────────── */
+    --xp-gradient: linear-gradient(90deg, hsl(217 91% 60%), hsl(199 89% 55%));
+    --brand-gradient: linear-gradient(135deg, hsl(217 91% 60%), hsl(262 83% 64%));
+    --glow-primary: 0 0 16px rgba(59, 130, 246, 0.3);
+    --glow-success: 0 0 16px rgba(34, 197, 94, 0.3);
+    --glow-danger: 0 0 16px rgba(239, 68, 68, 0.3);
+    --glow-warning: 0 0 16px rgba(245, 158, 11, 0.3);
+
+    /* ── Shadows ─────────────────────────────────────────────────── */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Global focus ring for keyboard navigation */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Headings with tighter tracking */
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* ── Confetti animation ──────────────────────────────────────── */
+  .animate-confetti-fall {
+    animation: confetti-fall linear forwards;
+  }
+
+  /* ── Shimmer effect ──────────────────────────────────────────── */
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background-size: 200% 100%;
+  }
+
+  /* ── XP float ────────────────────────────────────────────────── */
+  .animate-xp-float {
+    animation: xp-float 1.5s ease-out forwards;
+  }
+
+  /* ── Fade in up ──────────────────────────────────────────────── */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.35s ease-out forwards;
+  }
+
+  /* ── Scale in ────────────────────────────────────────────────── */
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out forwards;
+  }
+
+  /* ── Slide out left (task completion) ────────────────────────── */
+  .animate-slide-out-left {
+    animation: slide-out-left 0.35s ease-in forwards;
+    overflow: hidden;
+  }
+
+  /* ── Glow utilities ──────────────────────────────────────────── */
+  .glow-primary {
+    box-shadow: var(--glow-primary);
+  }
+
+  .glow-success {
+    box-shadow: var(--glow-success);
+  }
+
+  .glow-danger {
+    box-shadow: var(--glow-danger);
+  }
+
+  .glow-warning {
+    box-shadow: var(--glow-warning);
+  }
+
+  /* ── Gradient text ───────────────────────────────────────────── */
+  .text-gradient-brand {
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-xp {
+    background: var(--xp-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes xp-float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-48px) scale(0.85);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    max-height: 200px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.97);
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
