@@ -1,6 +1,7 @@
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { QuickCapture } from "@/components/layout/quick-capture";
+import { PomodoroTicker } from "@/components/pomodoro/pomodoro-ticker";
 
 export default function DashboardLayout({
   children,
@@ -15,6 +16,7 @@ export default function DashboardLayout({
         <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
       <QuickCapture />
+      <PomodoroTicker />
     </div>
   );
 }

@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores/authStore";
 import { useGamificationStore } from "@/stores/gamificationStore";
+import { usePomodoroStore } from "@/stores/pomodoroStore";
 import { logoutRequest } from "@/services/authService";
+import { formatTime } from "@/components/pomodoro/timer-ring";
 
 const PAGE_NAMES: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -46,6 +48,7 @@ export function Header() {
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const { xp, streakDays } = useGamificationStore();
+  const { isRunning, isPaused, timeRemaining, session } = usePomodoroStore();
 
   const handleLogout = async () => {
     await logoutRequest();
@@ -60,6 +63,24 @@ export function Header() {
       </h1>
 
       <div className="flex items-center gap-4">
+        {/* Mini-player */}
+        {(isRunning || isPaused) && (
+          <button
+            onClick={() => router.push("/pomodoro")}
+            className="flex items-center gap-1.5 text-xs bg-primary/10 text-primary px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors"
+          >
+            <span>{isRunning ? "🍅" : "⏸"}</span>
+            <span className="font-mono tabular-nums" suppressHydrationWarning>
+              {formatTime(timeRemaining)}
+            </span>
+            {session?.taskTitle && (
+              <span className="max-w-24 truncate text-primary/70">
+                {session.taskTitle}
+              </span>
+            )}
+          </button>
+        )}
+
         <Badge
           variant="secondary"
           className="gap-1 bg-primary/10 text-primary hover:bg-primary/20"
