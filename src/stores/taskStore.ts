@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Task, TaskStatus, CreateTaskPayload, UpdateTaskPayload } from "@/types/task";
+import api from "@/services/api";
 
 interface TaskFilters {
   priorities: string[];
@@ -31,44 +32,74 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   isLoading: false,
   filters: DEFAULT_FILTERS,
 
-  fetchTasks: async () => {
+  fetchTasks: async (filters?: Partial<TaskFilters>) => {
     set({ isLoading: true });
-    // TODO: implementar em US-F20
-    set({ isLoading: false });
+    try {
+      const activeFilters = { ...get().filters, ...filters };
+      const params = new URLSearchParams();
+      activeFilters.priorities.forEach((p) => params.append("priority", p));
+      if (activeFilters.dueDateRange) {
+        params.set("dueDateRange", activeFilters.dueDateRange);
+      }
+      const res = await api.get<Task[]>(`/api/tasks?${params.toString()}`);
+      set({ tasks: res.data });
+    } catch {
+      // silently fail — keeps existing tasks when API is unavailable
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
-  createTask: async () => {
-    // TODO: implementar em US-F22 / US-F23
+  createTask: async (data: CreateTaskPayload) => {
+    const res = await api.post<Task>("/api/tasks", data);
+    set((state) => ({ tasks: [...state.tasks, res.data] }));
   },
 
-  updateTask: async (id, data) => {
+  updateTask: async (id: string, data: UpdateTaskPayload) => {
     set((state) => ({
       tasks: state.tasks.map((t) => (t.id === id ? { ...t, ...data } : t)),
     }));
-    // TODO: implementar chamada API em US-F23
+    try {
+      await api.patch(`/api/tasks/${id}`, data);
+    } catch {
+      await get().fetchTasks();
+    }
   },
 
-  moveTask: async (id, status) => {
+  moveTask: async (id: string, status: TaskStatus) => {
     set((state) => ({
       tasks: state.tasks.map((t) => (t.id === id ? { ...t, status } : t)),
     }));
-    // TODO: implementar chamada API em US-F24
+    try {
+      await api.patch(`/api/tasks/${id}/status`, { status });
+    } catch {
+      await get().fetchTasks();
+    }
   },
 
-  reorderTask: async (id, order) => {
+  reorderTask: async (id: string, order: number) => {
     set((state) => ({
       tasks: state.tasks.map((t) => (t.id === id ? { ...t, order } : t)),
     }));
-    // TODO: implementar chamada API em US-F25
+    try {
+      await api.patch(`/api/tasks/${id}/reorder`, { order });
+    } catch {
+      await get().fetchTasks();
+    }
   },
 
-  completeTask: async (id) => {
+  completeTask: async (id: string) => {
     await get().moveTask(id, TaskStatus.Done);
   },
 
-  deleteTask: async (id) => {
+  deleteTask: async (id: string) => {
+    const previous = get().tasks;
     set((state) => ({ tasks: state.tasks.filter((t) => t.id !== id) }));
-    // TODO: implementar chamada API em US-F23
+    try {
+      await api.delete(`/api/tasks/${id}`);
+    } catch {
+      set({ tasks: previous });
+    }
   },
 
   setFilters: (filters) =>
