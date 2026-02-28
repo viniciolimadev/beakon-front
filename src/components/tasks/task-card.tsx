@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
   CalendarClock,
+  CheckCircle2,
+  Circle,
   Clock,
   MoreHorizontal,
   Pencil,
@@ -55,6 +58,7 @@ interface TaskCardProps {
   onDelete: (id: string) => void;
   onMoveToToday: (id: string) => void;
   onPomodoro: (id: string) => void;
+  onComplete?: (id: string) => void;
 }
 
 export function TaskCard({
@@ -63,7 +67,9 @@ export function TaskCard({
   onDelete,
   onMoveToToday,
   onPomodoro,
+  onComplete,
 }: TaskCardProps) {
+  const [completing, setCompleting] = useState(false);
   const {
     attributes,
     listeners,
@@ -79,6 +85,14 @@ export function TaskCard({
   };
 
   const overdue = isOverdue(task.dueDate);
+  const isDone = task.status === TaskStatus.Done;
+
+  const handleComplete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!onComplete || isDone || completing) return;
+    setCompleting(true);
+    setTimeout(() => onComplete(task.id), 320);
+  };
 
   return (
     <div
@@ -88,12 +102,31 @@ export function TaskCard({
         "group rounded-xl border border-border bg-surface p-3 space-y-2 select-none",
         "transition-all duration-150",
         "hover:-translate-y-0.5 hover:shadow-card hover:border-border-accent",
-        isDragging && "opacity-50 scale-105 shadow-modal cursor-grabbing rotate-1"
+        isDragging && "opacity-50 scale-105 shadow-modal cursor-grabbing rotate-1",
+        completing && "animate-slide-out-left pointer-events-none"
       )}
     >
       <div className="flex items-start justify-between gap-2">
+        {/* Completion checkbox */}
+        {!isDone && onComplete && (
+          <button
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={handleComplete}
+            className="mt-0.5 shrink-0 text-muted-foreground/40 hover:text-success transition-colors"
+            aria-label="Marcar como concluída"
+          >
+            {completing
+              ? <CheckCircle2 className="h-4 w-4 text-success" />
+              : <Circle className="h-4 w-4" />
+            }
+          </button>
+        )}
+
         <span
-          className="text-sm font-medium leading-snug flex-1 cursor-grab active:cursor-grabbing text-foreground"
+          className={cn(
+            "text-sm font-medium leading-snug flex-1 cursor-grab active:cursor-grabbing",
+            isDone ? "text-muted-foreground line-through" : "text-foreground"
+          )}
           {...attributes}
           {...listeners}
         >

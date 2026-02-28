@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
 import { useGamificationStore } from "@/stores/gamificationStore";
+import { usePomodoroStore } from "@/stores/pomodoroStore";
 import { logoutRequest } from "@/services/authService";
 
 const NAV_ITEMS = [
@@ -36,9 +37,15 @@ export function Sidebar() {
   const router = useRouter();
   const logout = useAuthStore((s) => s.logout);
   const { xp, level, streakDays } = useGamificationStore();
+  const isRunning = usePomodoroStore((s) => s.isRunning);
   const [collapsed, setCollapsed] = useState(
     () => typeof window !== "undefined" && window.innerWidth < 1024
   );
+
+  // Focus mode: auto-collapse when Pomodoro is running
+  useEffect(() => {
+    if (isRunning) setCollapsed(true);
+  }, [isRunning]);
 
   const xpInLevel = xp % XP_PER_LEVEL;
   const xpProgress = Math.round((xpInLevel / XP_PER_LEVEL) * 100);

@@ -143,6 +143,11 @@ export function KanbanBoard() {
     toast.success("Tarefa excluída");
   };
 
+  const handleComplete = (id: string) => {
+    moveTask(id, TaskStatus.Done);
+    toast.success("Tarefa concluída! 🎉");
+  };
+
   const handleMoveToToday = (id: string) => {
     moveTask(id, TaskStatus.Today);
     toast.success("Tarefa movida para hoje");
@@ -195,6 +200,7 @@ export function KanbanBoard() {
               onDelete={handleDelete}
               onMoveToToday={handleMoveToToday}
               onPomodoro={handlePomodoro}
+              onComplete={handleComplete}
             />
           ))}
         </div>

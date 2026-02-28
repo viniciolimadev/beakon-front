@@ -111,6 +111,27 @@
     background-size: 200% 100%;
   }
 
+  /* ── XP float ────────────────────────────────────────────────── */
+  .animate-xp-float {
+    animation: xp-float 1.5s ease-out forwards;
+  }
+
+  /* ── Fade in up ──────────────────────────────────────────────── */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.35s ease-out forwards;
+  }
+
+  /* ── Scale in ────────────────────────────────────────────────── */
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out forwards;
+  }
+
+  /* ── Slide out left (task completion) ────────────────────────── */
+  .animate-slide-out-left {
+    animation: slide-out-left 0.35s ease-in forwards;
+    overflow: hidden;
+  }
+
   /* ── Glow utilities ──────────────────────────────────────────── */
   .glow-primary {
     box-shadow: var(--glow-primary);
@@ -164,5 +185,56 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+@keyframes xp-float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-48px) scale(0.85);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    max-height: 200px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.97);
+    max-height: 0;
+    margin: 0;
+    padding: 0;
   }
 }

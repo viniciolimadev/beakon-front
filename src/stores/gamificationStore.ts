@@ -13,8 +13,11 @@ interface GamificationState {
   lastAchievement: Achievement | null;
   dashboard: DashboardData | null;
   isLoading: boolean;
+  /** Set when addXP is called; used by XpFloatAnimation */
+  lastXpGain: number | null;
   fetchDashboard: () => Promise<void>;
   addXP: (amount: number) => void;
+  clearXpGain: () => void;
   unlockAchievement: (achievement: Achievement) => void;
 }
 
@@ -35,6 +38,7 @@ export const useGamificationStore = create<GamificationState>((set, get) => ({
   lastAchievement: null,
   dashboard: null,
   isLoading: false,
+  lastXpGain: null,
 
   fetchDashboard: async () => {
     set({ isLoading: true });
@@ -67,10 +71,10 @@ export const useGamificationStore = create<GamificationState>((set, get) => ({
     const prev = get();
     const newXP = prev.xp + amount;
     const { level, xpToNextLevel } = calcLevel(newXP);
-    const leveledUp = level > prev.level;
-    set({ xp: newXP, level, xpToNextLevel });
-    return leveledUp;
+    set({ xp: newXP, level, xpToNextLevel, lastXpGain: amount });
   },
+
+  clearXpGain: () => set({ lastXpGain: null }),
 
   unlockAchievement: (achievement: Achievement) => {
     set((state) => ({

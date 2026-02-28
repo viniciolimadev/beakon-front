@@ -17,6 +17,7 @@ interface KanbanColumnProps {
   onDelete: (id: string) => void;
   onMoveToToday: (id: string) => void;
   onPomodoro: (id: string) => void;
+  onComplete: (id: string) => void;
 }
 
 const EMPTY_STATES: Record<
@@ -58,6 +59,7 @@ export function KanbanColumn({
   onDelete,
   onMoveToToday,
   onPomodoro,
+  onComplete,
 }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id });
 
@@ -97,6 +99,7 @@ export function KanbanColumn({
               onDelete={onDelete}
               onMoveToToday={onMoveToToday}
               onPomodoro={onPomodoro}
+              onComplete={onComplete}
             />
           ))}
         </SortableContext>
