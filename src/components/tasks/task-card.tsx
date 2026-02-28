@@ -23,16 +23,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Task, TaskPriority, TaskStatus } from "@/types";
 
-const PRIORITY_STYLES: Record<TaskPriority, string> = {
-  [TaskPriority.Low]: "bg-success/10 text-success border-success/20",
-  [TaskPriority.Medium]: "bg-warning/10 text-warning border-warning/20",
-  [TaskPriority.High]: "bg-destructive/10 text-destructive border-destructive/20",
+const PRIORITY_DOT: Record<TaskPriority, string> = {
+  [TaskPriority.Low]: "bg-success",
+  [TaskPriority.Medium]: "bg-warning",
+  [TaskPriority.High]: "bg-danger",
 };
 
 const PRIORITY_LABELS: Record<TaskPriority, string> = {
   [TaskPriority.Low]: "Baixa",
   [TaskPriority.Medium]: "Média",
   [TaskPriority.High]: "Alta",
+};
+
+const PRIORITY_BADGE_VARIANT: Record<
+  TaskPriority,
+  "success" | "warning" | "danger"
+> = {
+  [TaskPriority.Low]: "success",
+  [TaskPriority.Medium]: "warning",
+  [TaskPriority.High]: "danger",
 };
 
 function isOverdue(dueDate?: string): boolean {
@@ -76,14 +85,15 @@ export function TaskCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "rounded-lg border border-border bg-card p-3 space-y-2 select-none transition-shadow",
-        "hover:shadow-md hover:border-border/80",
-        isDragging && "opacity-40"
+        "group rounded-xl border border-border bg-surface p-3 space-y-2 select-none",
+        "transition-all duration-150",
+        "hover:-translate-y-0.5 hover:shadow-card hover:border-border-accent",
+        isDragging && "opacity-50 scale-105 shadow-modal cursor-grabbing rotate-1"
       )}
     >
       <div className="flex items-start justify-between gap-2">
         <span
-          className="text-sm font-medium leading-snug flex-1 cursor-grab active:cursor-grabbing"
+          className="text-sm font-medium leading-snug flex-1 cursor-grab active:cursor-grabbing text-foreground"
           {...attributes}
           {...listeners}
         >
@@ -94,34 +104,34 @@ export function TaskCard({
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
-              className="h-5 w-5 shrink-0 text-muted-foreground hover:text-foreground"
+              size="icon-sm"
+              className="h-6 w-6 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
               onPointerDown={(e) => e.stopPropagation()}
             >
               <MoreHorizontal className="h-3.5 w-3.5" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={() => onEdit(task)}>
-              <Pencil className="h-3.5 w-3.5 mr-2" />
+          <DropdownMenuContent align="end" className="bg-surface-elevated border-border">
+            <DropdownMenuItem onSelect={() => onEdit(task)} className="gap-2">
+              <Pencil className="h-3.5 w-3.5" />
               Editar
             </DropdownMenuItem>
             {task.status !== TaskStatus.Today && (
-              <DropdownMenuItem onSelect={() => onMoveToToday(task.id)}>
-                <CalendarClock className="h-3.5 w-3.5 mr-2" />
+              <DropdownMenuItem onSelect={() => onMoveToToday(task.id)} className="gap-2">
+                <CalendarClock className="h-3.5 w-3.5" />
                 Mover para hoje
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem onSelect={() => onPomodoro(task.id)}>
-              <Timer className="h-3.5 w-3.5 mr-2" />
+            <DropdownMenuItem onSelect={() => onPomodoro(task.id)} className="gap-2">
+              <Timer className="h-3.5 w-3.5" />
               Iniciar Pomodoro
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-destructive focus:text-destructive"
+              className="text-danger focus:text-danger gap-2"
               onSelect={() => onDelete(task.id)}
             >
-              <Trash2 className="h-3.5 w-3.5 mr-2" />
+              <Trash2 className="h-3.5 w-3.5" />
               Excluir
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -130,8 +140,8 @@ export function TaskCard({
 
       <div className="flex items-center gap-2 flex-wrap">
         <Badge
-          variant="outline"
-          className={cn("text-xs", PRIORITY_STYLES[task.priority])}
+          variant={PRIORITY_BADGE_VARIANT[task.priority]}
+          dot
         >
           {PRIORITY_LABELS[task.priority]}
         </Badge>
@@ -147,7 +157,7 @@ export function TaskCard({
           <span
             className={cn(
               "text-xs",
-              overdue ? "text-destructive" : "text-muted-foreground"
+              overdue ? "text-danger font-medium" : "text-muted-foreground"
             )}
           >
             {new Date(task.dueDate).toLocaleDateString("pt-BR")}

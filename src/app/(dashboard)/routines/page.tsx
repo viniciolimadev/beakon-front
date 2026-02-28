@@ -33,9 +33,9 @@ export default function RoutinesPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-4xl">
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+        <div className="flex items-center gap-0.5 bg-surface rounded-lg p-1 border border-border">
           <ViewButton
             active={view === "list"}
             onClick={() => setView("list")}
@@ -50,8 +50,8 @@ export default function RoutinesPage() {
           />
         </div>
 
-        <Button size="sm" onClick={handleNew}>
-          <Plus className="h-4 w-4 mr-1" />
+        <Button size="sm" variant="primary" onClick={handleNew}>
+          <Plus className="h-4 w-4" />
           Nova rotina
         </Button>
       </div>
@@ -86,9 +86,9 @@ function ViewButton({
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors",
+        "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors",
         active
-          ? "bg-background text-foreground shadow-sm"
+          ? "bg-surface-elevated text-foreground shadow-sm border border-border"
           : "text-muted-foreground hover:text-foreground"
       )}
     >

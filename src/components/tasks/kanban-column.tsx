@@ -63,9 +63,12 @@ export function KanbanColumn({
 
   return (
     <div className="flex flex-col w-72 shrink-0">
+      {/* Column header — uppercase label style */}
       <div className="flex items-center justify-between mb-2 px-1">
-        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-        <span className="text-xs text-muted-foreground bg-muted rounded-full px-2 py-0.5 tabular-nums">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+          {title}
+        </h3>
+        <span className="text-xs font-mono text-muted-foreground/70 bg-surface-elevated rounded-full px-2 py-0.5 tabular-nums border border-border">
           {tasks.length}
         </span>
       </div>
@@ -75,7 +78,8 @@ export function KanbanColumn({
       <div
         ref={setNodeRef}
         className={cn(
-          "flex-1 space-y-2 rounded-lg p-2 min-h-[200px] transition-colors overflow-y-auto max-h-[calc(100vh-220px)]",
+          "flex-1 space-y-2 rounded-xl p-2 min-h-[200px] transition-all duration-200",
+          "overflow-y-auto max-h-[calc(100vh-220px)]",
           isOver
             ? "bg-primary/5 border border-dashed border-primary/40"
             : "border border-transparent"
@@ -100,10 +104,12 @@ export function KanbanColumn({
         {tasks.length === 0 && (() => {
           const { Icon, message, sub } = EMPTY_STATES[id];
           return (
-            <div className="flex flex-col items-center gap-1.5 pt-6 px-2 text-center">
-              <Icon className="h-7 w-7 text-muted-foreground/40" />
+            <div className="flex flex-col items-center gap-1.5 pt-8 px-2 text-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-elevated">
+                <Icon className="h-5 w-5 text-muted-foreground/40" />
+              </div>
               <p className="text-xs font-medium text-muted-foreground">{message}</p>
-              {sub && <p className="text-xs text-muted-foreground/60">{sub}</p>}
+              {sub && <p className="text-xs text-muted-foreground/50">{sub}</p>}
             </div>
           );
         })()}

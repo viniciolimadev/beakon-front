@@ -16,12 +16,18 @@ export default function AchievementsPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <XpLevelBar />
-      <StreakCalendar />
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+          Calendário de streak
+        </h3>
+        <StreakCalendar />
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
           Conquistas
-        </h2>
+        </h3>
         <AchievementGrid />
       </section>
     </div>

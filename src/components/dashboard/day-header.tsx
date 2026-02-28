@@ -32,21 +32,27 @@ export function DayHeader() {
   const firstName = user?.name.split(" ")[0] ?? "você";
 
   return (
-    <div className="space-y-1">
-      <h2 className="text-2xl font-bold text-foreground" suppressHydrationWarning>
+    <div className="space-y-1.5">
+      <h2
+        className="text-3xl font-bold tracking-tight text-gradient-brand"
+        suppressHydrationWarning
+      >
         {getGreeting(firstName)}
       </h2>
-      <p className="text-sm text-muted-foreground capitalize" suppressHydrationWarning>
+      <p
+        className="text-sm text-muted-foreground capitalize"
+        suppressHydrationWarning
+      >
         {formatDate()}
       </p>
-      <p className="text-sm text-muted-foreground flex items-center gap-1 pt-1">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground pt-0.5">
         <span>{todayTasks.length} tarefas para hoje</span>
         <span className="text-border">·</span>
         <span>{focusMinutes} min focados</span>
         <span className="text-border">·</span>
         <Flame className="h-3.5 w-3.5 text-danger" />
-        <span>{streakDays} dias</span>
-      </p>
+        <span className="font-mono">{streakDays} dias</span>
+      </div>
     </div>
   );
 }
