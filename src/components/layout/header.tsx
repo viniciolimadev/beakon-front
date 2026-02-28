@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import { Flame, Zap, LogOut, User } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -17,6 +16,7 @@ import { useGamificationStore } from "@/stores/gamificationStore";
 import { usePomodoroStore } from "@/stores/pomodoroStore";
 import { logoutRequest } from "@/services/authService";
 import { formatTime } from "@/components/pomodoro/timer-ring";
+import { cn } from "@/lib/utils";
 
 const PAGE_NAMES: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -57,58 +57,70 @@ export function Header() {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-card px-6">
-      <h1 className="text-lg font-semibold text-foreground">
+    <header
+      className={cn(
+        "sticky top-0 z-40 flex h-14 items-center justify-between",
+        "border-b border-border px-6",
+        "bg-background/80 backdrop-blur-sm"
+      )}
+    >
+      {/* Page title */}
+      <h1 className="text-base font-semibold text-foreground tracking-tight">
         {getPageName(pathname)}
       </h1>
 
-      <div className="flex items-center gap-4">
-        {/* Mini-player */}
+      <div className="flex items-center gap-3">
+        {/* Pomodoro mini-player */}
         {(isRunning || isPaused) && (
           <button
             onClick={() => router.push("/pomodoro")}
-            className="flex items-center gap-1.5 text-xs bg-primary/10 text-primary px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors"
+            className={cn(
+              "flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5",
+              "bg-primary/10 text-primary border border-primary/20",
+              "hover:bg-primary/20 transition-colors duration-200"
+            )}
           >
             <span>{isRunning ? "🍅" : "⏸"}</span>
             <span className="font-mono tabular-nums" suppressHydrationWarning>
               {formatTime(timeRemaining)}
             </span>
             {session?.taskTitle && (
-              <span className="max-w-24 truncate text-primary/70">
-                {session.taskTitle}
+              <span className="max-w-24 truncate text-primary/70 hidden sm:block">
+                · {session.taskTitle}
               </span>
             )}
           </button>
         )}
 
-        <Badge
-          variant="secondary"
-          className="gap-1 bg-primary/10 text-primary hover:bg-primary/20"
-        >
-          <Zap className="h-3 w-3" />
-          {xp} XP
-        </Badge>
+        {/* XP badge */}
+        <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+          <Zap className="h-3.5 w-3.5 text-warning" />
+          <span className="font-mono tabular-nums">{xp.toLocaleString("pt-BR")}</span>
+          <span className="text-muted-foreground/60 hidden sm:inline">XP</span>
+        </div>
 
-        <span className="flex items-center gap-1 text-sm font-medium text-muted-foreground">
-          <Flame className="h-4 w-4 text-danger" />
-          {streakDays}
-        </span>
+        {/* Streak */}
+        <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+          <Flame className="h-3.5 w-3.5 text-danger" />
+          <span className="font-mono tabular-nums">{streakDays}</span>
+        </div>
 
+        {/* Avatar dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-              <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarFallback className="bg-primary/10 text-primary text-xs">
+              <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-border hover:ring-primary/40 transition-all duration-200">
+                <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
                   {user ? getInitials(user.name) : <User className="h-4 w-4" />}
                 </AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuContent align="end" className="w-52 bg-surface-elevated border-border">
             {user && (
               <>
-                <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium truncate">{user.name}</p>
+                <div className="px-2 py-2">
+                  <p className="text-sm font-semibold truncate">{user.name}</p>
                   <p className="text-xs text-muted-foreground truncate">
                     {user.email}
                   </p>
@@ -118,9 +130,9 @@ export function Header() {
             )}
             <DropdownMenuItem
               onClick={handleLogout}
-              className="text-muted-foreground cursor-pointer"
+              className="text-muted-foreground cursor-pointer hover:text-foreground gap-2"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="h-4 w-4" />
               Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
