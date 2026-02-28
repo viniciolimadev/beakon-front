@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { QuickCapture } from "@/components/layout/quick-capture";
 import { PomodoroTicker } from "@/components/pomodoro/pomodoro-ticker";
+import { AchievementUnlockToast } from "@/components/achievements/achievement-unlock-toast";
 
 export default function DashboardLayout({
   children,
@@ -17,6 +18,7 @@ export default function DashboardLayout({
       </div>
       <QuickCapture />
       <PomodoroTicker />
+      <AchievementUnlockToast />
     </div>
   );
 }
