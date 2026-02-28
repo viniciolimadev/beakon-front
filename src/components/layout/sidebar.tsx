@@ -35,7 +35,9 @@ export function Sidebar() {
   const router = useRouter();
   const logout = useAuthStore((s) => s.logout);
   const { xp, streakDays } = useGamificationStore();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 1024
+  );
 
   const handleLogout = async () => {
     await logoutRequest();

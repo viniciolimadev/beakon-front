@@ -3,6 +3,7 @@
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
+import { Inbox, CalendarCheck, CalendarDays, Archive, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Task, TaskStatus } from "@/types";
 import { TaskCard } from "./task-card";
@@ -18,12 +19,35 @@ interface KanbanColumnProps {
   onPomodoro: (id: string) => void;
 }
 
-const EMPTY_MESSAGES: Record<TaskStatus, string> = {
-  [TaskStatus.Inbox]: "Use o campo acima para capturar tarefas.",
-  [TaskStatus.Today]: "Nada para hoje. Mova tarefas do backlog!",
-  [TaskStatus.ThisWeek]: "Nenhuma tarefa para esta semana.",
-  [TaskStatus.Backlog]: "Backlog vazio. Ótimo trabalho!",
-  [TaskStatus.Done]: "Nenhuma tarefa concluída ainda.",
+const EMPTY_STATES: Record<
+  TaskStatus,
+  { message: string; sub?: string; Icon: React.ElementType }
+> = {
+  [TaskStatus.Inbox]: {
+    Icon: Inbox,
+    message: "Tudo organizado!",
+    sub: "Capture sua próxima ideia.",
+  },
+  [TaskStatus.Today]: {
+    Icon: CalendarCheck,
+    message: "Nenhuma tarefa para hoje.",
+    sub: "Que tal planejar agora?",
+  },
+  [TaskStatus.ThisWeek]: {
+    Icon: CalendarDays,
+    message: "Semana livre por enquanto.",
+    sub: "Mova tarefas do backlog.",
+  },
+  [TaskStatus.Backlog]: {
+    Icon: Archive,
+    message: "Backlog vazio.",
+    sub: "Ótimo trabalho!",
+  },
+  [TaskStatus.Done]: {
+    Icon: CheckCheck,
+    message: "Nenhuma tarefa concluída.",
+    sub: "Comece e volte aqui! 🚀",
+  },
 };
 
 export function KanbanColumn({
@@ -73,11 +97,16 @@ export function KanbanColumn({
           ))}
         </SortableContext>
 
-        {tasks.length === 0 && (
-          <p className="text-xs text-muted-foreground text-center pt-6 px-2">
-            {EMPTY_MESSAGES[id]}
-          </p>
-        )}
+        {tasks.length === 0 && (() => {
+          const { Icon, message, sub } = EMPTY_STATES[id];
+          return (
+            <div className="flex flex-col items-center gap-1.5 pt-6 px-2 text-center">
+              <Icon className="h-7 w-7 text-muted-foreground/40" />
+              <p className="text-xs font-medium text-muted-foreground">{message}</p>
+              {sub && <p className="text-xs text-muted-foreground/60">{sub}</p>}
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

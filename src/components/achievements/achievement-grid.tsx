@@ -56,9 +56,21 @@ export function AchievementGrid() {
       </div>
 
       {filtered.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-8">
-          Nenhuma conquista nesta categoria ainda.
-        </p>
+        <div className="flex flex-col items-center gap-2 py-12 text-center">
+          <Trophy className="h-10 w-10 text-muted-foreground/30" />
+          <p className="text-sm font-medium text-muted-foreground">
+            {filter === "unlocked"
+              ? "Nenhuma conquista desbloqueada ainda."
+              : filter === "locked"
+              ? "Todas as conquistas foram desbloqueadas! 🎉"
+              : "Sua jornada começa com a primeira tarefa."}
+          </p>
+          {filter === "all" && (
+            <p className="text-xs text-muted-foreground/60">
+              Complete tarefas e sessões Pomodoro para ganhar conquistas.
+            </p>
+          )}
+        </div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
