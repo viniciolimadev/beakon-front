@@ -33,10 +33,10 @@ export function DayHeader() {
 
   return (
     <div className="space-y-1">
-      <h2 className="text-2xl font-bold text-foreground">
+      <h2 className="text-2xl font-bold text-foreground" suppressHydrationWarning>
         {getGreeting(firstName)}
       </h2>
-      <p className="text-sm text-muted-foreground capitalize">
+      <p className="text-sm text-muted-foreground capitalize" suppressHydrationWarning>
         {formatDate()}
       </p>
       <p className="text-sm text-muted-foreground flex items-center gap-1 pt-1">
