@@ -5,37 +5,40 @@
 @layer base {
   :root {
     /* ── Core layout ─────────────────────────────────────────────── */
-    --background: 215 28% 7%;
-    --foreground: 214 32% 91%;
+    /* Dark Mode (Default) - Warm Charcoal #0A0805 */
+    --background: 36 33% 3%;
+    /* Ivory Text #F5EDD8 */
+    --foreground: 44 57% 90%;
 
     /* ── Surface hierarchy ───────────────────────────────────────── */
-    --surface: 217 33% 12%;
-    --surface-elevated: 217 33% 17%;
+    --surface: 34 20% 6%;
+    --surface-elevated: 30 17% 10%;
 
     /* ── Card (Shadcn compat) ────────────────────────────────────── */
-    --card: 217 33% 12%;
-    --card-foreground: 214 32% 91%;
-    --popover: 217 33% 12%;
-    --popover-foreground: 214 32% 91%;
+    --card: 34 20% 6%;
+    --card-foreground: 44 57% 90%;
+    --popover: 34 20% 6%;
+    --popover-foreground: 44 57% 90%;
 
     /* ── Text hierarchy ──────────────────────────────────────────── */
-    --text-primary: 214 32% 91%;
-    --text-secondary: 214 25% 75%;
-    --text-muted: 215 20% 55%;
+    --text-primary: 44 57% 90%;
+    --text-secondary: 40 20% 70%;
+    --text-muted: 30 6% 64%;
 
     /* Shadcn compat */
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 30 17% 10%;
+    --muted-foreground: 30 6% 64%;
 
     /* ── Brand ───────────────────────────────────────────────────── */
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
+    /* Amber #E8924A */
+    --primary: 27 78% 60%;
+    --primary-foreground: 36 33% 3%;
 
     /* ── Secondary / accent ──────────────────────────────────────── */
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 214 32% 91%;
-    --accent: 217 33% 20%;
-    --accent-foreground: 214 32% 91%;
+    --secondary: 30 17% 10%;
+    --secondary-foreground: 44 57% 90%;
+    --accent: 30 17% 15%;
+    --accent-foreground: 44 57% 90%;
 
     /* ── Semantic ────────────────────────────────────────────────── */
     --success: 160 84% 39%;
@@ -50,26 +53,80 @@
     --destructive-foreground: 0 0% 100%;
 
     /* ── Borders ─────────────────────────────────────────────────── */
-    --border: 215 25% 22%;
-    --border-accent: 217 91% 60%;
-    --input: 215 25% 22%;
-    --ring: 217 91% 60%;
+    --border: 30 12% 16%;
+    --border-accent: 27 78% 60%;
+    --input: 30 12% 16%;
+    --ring: 27 78% 60%;
 
     /* ── Radius ──────────────────────────────────────────────────── */
     --radius: 0.625rem;
 
     /* ── Gradients ───────────────────────────────────────────────── */
-    --xp-gradient: linear-gradient(90deg, hsl(217 91% 60%), hsl(199 89% 55%));
-    --brand-gradient: linear-gradient(135deg, hsl(217 91% 60%), hsl(262 83% 64%));
-    --glow-primary: 0 0 16px rgba(59, 130, 246, 0.3);
+    --xp-gradient: linear-gradient(90deg, hsl(27 78% 60%), hsl(40 90% 70%));
+    --brand-gradient: linear-gradient(135deg, hsl(27 78% 60%), hsl(20 80% 50%));
+    --glow-primary: 0 0 20px rgba(232, 146, 74, 0.25);
     --glow-success: 0 0 16px rgba(34, 197, 94, 0.3);
     --glow-danger: 0 0 16px rgba(239, 68, 68, 0.3);
     --glow-warning: 0 0 16px rgba(245, 158, 11, 0.3);
 
     /* ── Shadows ─────────────────────────────────────────────────── */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
+    --shadow-modal: 0 8px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .light {
+    /* ── Light Theme ─────────────────────────────────────────────── */
+    /* Cream Parchment #FAF5EC */
+    --background: 40 64% 95%;
+    /* Dark Brown Text */
+    --foreground: 17 26% 13%;
+
+    /* ── Surface hierarchy ───────────────────────────────────────── */
+    --surface: 0 0% 100%;
+    --surface-elevated: 38 45% 89%;
+
+    /* ── Card (Shadcn compat) ────────────────────────────────────── */
+    --card: 0 0% 100%;
+    --card-foreground: 17 26% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 17 26% 13%;
+
+    /* ── Text hierarchy ──────────────────────────────────────────── */
+    --text-primary: 17 26% 13%;
+    --text-secondary: 20 15% 40%;
+    --text-muted: 35 10% 52%;
+
+    /* Shadcn compat */
+    --muted: 38 45% 89%;
+    --muted-foreground: 35 10% 52%;
+
+    /* ── Brand ───────────────────────────────────────────────────── */
+    /* Copper #B45309 */
+    --primary: 26 90% 37%;
+    --primary-foreground: 40 64% 95%;
+
+    /* ── Secondary / accent ──────────────────────────────────────── */
+    --secondary: 38 45% 89%;
+    --secondary-foreground: 17 26% 13%;
+    --accent: 38 40% 85%;
+    --accent-foreground: 17 26% 13%;
+
+    /* ── Borders ─────────────────────────────────────────────────── */
+    --border: 38 30% 85%;
+    --border-accent: 26 90% 37%;
+    --input: 38 30% 85%;
+    --ring: 26 90% 37%;
+
+    /* ── Gradients ───────────────────────────────────────────────── */
+    --xp-gradient: linear-gradient(90deg, hsl(26 90% 37%), hsl(35 80% 50%));
+    --brand-gradient: linear-gradient(135deg, hsl(26 90% 37%), hsl(15 85% 30%));
+    --glow-primary: 0 0 20px rgba(180, 83, 9, 0.15);
+
+    /* ── Shadows ─────────────────────────────────────────────────── */
+    --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.05);
+    --shadow-card: 0 4px 12px rgba(28, 25, 23, 0.05), 0 1px 3px rgba(28, 25, 23, 0.05);
+    --shadow-modal: 0 8px 30px rgba(28, 25, 23, 0.1), 0 4px 10px rgba(28, 25, 23, 0.05);
   }
 }
 
