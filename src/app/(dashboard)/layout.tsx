@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/header";
 import { QuickCapture } from "@/components/layout/quick-capture";
 import { PomodoroTicker } from "@/components/pomodoro/pomodoro-ticker";
 import { AchievementUnlockToast } from "@/components/achievements/achievement-unlock-toast";
+import { AuthGuard } from "@/components/layout/auth-guard";
 
 export default function DashboardLayout({
   children,
@@ -10,15 +11,17 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-auto p-6 lg:p-8">{children}</main>
+    <AuthGuard>
+      <div className="flex h-screen bg-background">
+        <Sidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <Header />
+          <main className="flex-1 overflow-auto p-6 lg:p-8">{children}</main>
+        </div>
+        <QuickCapture />
+        <PomodoroTicker />
+        <AchievementUnlockToast />
       </div>
-      <QuickCapture />
-      <PomodoroTicker />
-      <AchievementUnlockToast />
-    </div>
+    </AuthGuard>
   );
 }

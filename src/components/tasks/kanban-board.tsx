@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -51,6 +51,9 @@ export function KanbanBoard() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Track the ORIGINAL column before handleDragOver mutates localTasks
+  const dragOriginColumn = useRef<TaskStatus | null>(null);
+
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
@@ -69,6 +72,8 @@ export function KanbanBoard() {
   const handleDragStart = ({ active }: DragStartEvent) => {
     const task = localTasks.find((t) => t.id === active.id);
     setActiveTask(task ?? null);
+    // Capture the original column BEFORE any drag-over mutations
+    dragOriginColumn.current = task?.status ?? null;
   };
 
   const handleDragOver = ({ active, over }: DragOverEvent) => {
@@ -94,33 +99,47 @@ export function KanbanBoard() {
     setActiveTask(null);
     if (!over) {
       setLocalTasks(tasks);
+      dragOriginColumn.current = null;
       return;
     }
 
     const activeId = active.id as string;
     const overId = over.id as string;
 
-    const activeColumn = getTaskColumn(activeId, localTasks);
+    // Use the ref to get the ORIGINAL column (before drag-over mutations)
+    const originalColumn = dragOriginColumn.current;
+    dragOriginColumn.current = null;
+
     const isOverColumn = STATUSES.has(overId as TaskStatus);
     const overColumn = isOverColumn
       ? (overId as TaskStatus)
       : getTaskColumn(overId, localTasks);
 
-    if (!activeColumn || !overColumn) return;
+    if (!originalColumn || !overColumn) return;
 
-    if (activeColumn !== overColumn) {
+    if (originalColumn !== overColumn) {
+      // Cross-column move — persist to API
       moveTask(activeId, overColumn);
+      const columnLabels: Record<string, string> = {
+        inbox: "Inbox",
+        today: "Hoje",
+        this_week: "Esta Semana",
+        backlog: "Backlog",
+        done: "Concluídas",
+      };
+      toast.success(`Tarefa movida para ${columnLabels[overColumn] ?? overColumn}`);
     } else {
+      // Same-column reorder
       const colTasks = localTasks
-        .filter((t) => t.status === activeColumn)
-        .sort((a, b) => a.order - b.order);
+        .filter((t) => t.status === originalColumn)
+        .sort((a, b) => a.sortOrder - b.sortOrder);
       const activeIdx = colTasks.findIndex((t) => t.id === activeId);
       const overIdx = colTasks.findIndex((t) => t.id === overId);
 
       if (activeIdx !== -1 && overIdx !== -1 && activeIdx !== overIdx) {
         const reordered = arrayMove(colTasks, activeIdx, overIdx);
         setLocalTasks((prev) => {
-          const others = prev.filter((t) => t.status !== activeColumn);
+          const others = prev.filter((t) => t.status !== originalColumn);
           return [...others, ...reordered];
         });
         reorderTask(activeId, overIdx);
@@ -157,7 +176,7 @@ export function KanbanBoard() {
     (status: TaskStatus) =>
       localTasks
         .filter((t) => t.status === status)
-        .sort((a, b) => a.order - b.order),
+        .sort((a, b) => a.sortOrder - b.sortOrder),
     [localTasks]
   );
 

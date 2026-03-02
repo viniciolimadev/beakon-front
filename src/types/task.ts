@@ -20,7 +20,7 @@ export interface Task {
   priority: TaskPriority;
   estimatedMinutes?: number;
   dueDate?: string;
-  order: number;
+  sortOrder: number;
   userId: string;
   createdAt: string;
   updatedAt: string;
@@ -35,4 +35,4 @@ export interface CreateTaskPayload {
   dueDate?: string;
 }
 
-export interface UpdateTaskPayload extends Partial<CreateTaskPayload> {}
+export interface UpdateTaskPayload extends Partial<CreateTaskPayload> { }

@@ -4,7 +4,8 @@ export async function POST(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
   if (token) {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+    const apiUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL;
+    await fetch(`${apiUrl}/api/auth/logout`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     }).catch(() => {

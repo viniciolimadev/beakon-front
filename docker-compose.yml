@@ -8,7 +8,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+      - INTERNAL_API_URL=${INTERNAL_API_URL:-http://beakon_nginx:80}
     restart: unless-stopped
 
   beakon-front-dev:
@@ -23,6 +24,11 @@ services:
       - .:/app
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
     profiles:
       - dev
+
+networks:
+  default:
+    name: beakon-api_beakon_net
+    external: true

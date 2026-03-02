@@ -37,7 +37,12 @@ api.interceptors.response.use(
     if (status === 401) {
       useAuthStore.getState().logout();
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        // Explicittly call Next.js logout API to destroy the HttpOnly cookie
+        fetch("/api/auth/logout", { method: "POST" })
+          .catch(() => { })
+          .finally(() => {
+            window.location.href = "/login";
+          });
       }
       return Promise.reject(error);
     }
