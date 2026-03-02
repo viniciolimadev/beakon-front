@@ -41,8 +41,8 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       if (activeFilters.dueDateRange) {
         params.set("dueDateRange", activeFilters.dueDateRange);
       }
-      const res = await api.get<Task[]>(`/api/tasks?${params.toString()}`);
-      set({ tasks: res.data });
+      const res = await api.get<{ data: { items: Task[]; total: number } }>(`/api/tasks?${params.toString()}`);
+      set({ tasks: res.data.data.items || [] });
     } catch {
       // silently fail — keeps existing tasks when API is unavailable
     } finally {
@@ -51,8 +51,13 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   },
 
   createTask: async (data: CreateTaskPayload) => {
-    const res = await api.post<Task>("/api/tasks", data);
-    set((state) => ({ tasks: [...state.tasks, res.data] }));
+    const payload = {
+      ...data,
+      estimated_minutes: data.estimatedMinutes,
+      due_date: data.dueDate,
+    };
+    const res = await api.post<{ data: Task }>("/api/tasks", payload);
+    set((state) => ({ tasks: [...state.tasks, res.data.data] }));
   },
 
   updateTask: async (id: string, data: UpdateTaskPayload) => {
@@ -60,7 +65,12 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       tasks: state.tasks.map((t) => (t.id === id ? { ...t, ...data } : t)),
     }));
     try {
-      await api.patch(`/api/tasks/${id}`, data);
+      const payload = {
+        ...data,
+        estimated_minutes: data.estimatedMinutes,
+        due_date: data.dueDate,
+      };
+      await api.patch(`/api/tasks/${id}`, payload);
     } catch {
       await get().fetchTasks();
     }
@@ -79,7 +89,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 
   reorderTask: async (id: string, order: number) => {
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === id ? { ...t, order } : t)),
+      tasks: state.tasks.map((t) => (t.id === id ? { ...t, sortOrder: order } : t)),
     }));
     try {
       await api.patch(`/api/tasks/${id}/reorder`, { order });
