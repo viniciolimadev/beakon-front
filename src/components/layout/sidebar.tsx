@@ -54,7 +54,7 @@ export function Sidebar() {
       className={cn(
         "relative flex h-screen flex-col border-r border-border bg-surface",
         "transition-[width] duration-300 ease-in-out shrink-0",
-        collapsed ? "w-16" : "w-60"
+        collapsed ? "w-16" : "w-64"
       )}
     >
       {/* Collapse toggle — chevron rotates */}
@@ -94,7 +94,7 @@ export function Sidebar() {
               href={href}
               title={collapsed ? label : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-lg py-2 text-sm font-medium",
+                "flex items-center gap-3 rounded-lg py-3 text-sm font-medium",
                 "transition-colors duration-150",
                 "border-l-2 pl-2.5",
                 isActive

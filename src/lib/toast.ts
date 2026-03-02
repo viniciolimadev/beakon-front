@@ -18,7 +18,7 @@ export function useAppToast() {
 
     achievement: (title: string, xpReward: number) =>
       toast({
-        title: `🏆 Conquista: ${title}`,
+        title: `Conquista: ${title}`,
         description: `+${xpReward} XP bônus`,
       }),
   };

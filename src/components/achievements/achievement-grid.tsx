@@ -65,8 +65,8 @@ export function AchievementGrid() {
               {filter === "unlocked"
                 ? "Nenhuma conquista desbloqueada ainda."
                 : filter === "locked"
-                ? "Todas as conquistas foram desbloqueadas! 🎉"
-                : "Sua jornada começa com a primeira tarefa."}
+                  ? "Todas as conquistas foram desbloqueadas!"
+                  : "Sua jornada começa com a primeira tarefa."}
             </p>
             {filter === "all" && (
               <p className="text-xs text-muted-foreground">

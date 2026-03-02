@@ -48,12 +48,12 @@ export function PomodoroTicker() {
     if (mode === "focus") {
       finish(true).then(() => {
         startBreak();
-        toast.success("Sessão concluída! Hora da pausa 🎉");
+        toast.success("Sessão concluída! Hora da pausa");
         transitioningRef.current = false;
       });
     } else {
       nextMode();
-      toast.success("Pausa encerrada! Hora de focar 🍅");
+      toast.success("Pausa encerrada! Hora de focar");
       transitioningRef.current = false;
     }
   }, [timeRemaining, isRunning, mode, finish, startBreak, nextMode, toast]);
@@ -68,8 +68,8 @@ export function PomodoroTicker() {
       .toString()
       .padStart(2, "0");
     const ss = (timeRemaining % 60).toString().padStart(2, "0");
-    const emoji = mode === "focus" ? "🍅" : "☕";
-    document.title = `${emoji} ${mm}:${ss} — Beakon`;
+    const prefix = mode === "focus" ? "▶" : "⏸";
+    document.title = `${prefix} ${mm}:${ss} — Beakon`;
   }, [timeRemaining, isRunning, mode]);
 
   return null;

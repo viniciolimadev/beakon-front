@@ -143,6 +143,7 @@ export function KanbanBoard() {
     toast.success("Tarefa excluída");
   };
 
+
   const handleMoveToToday = (id: string) => {
     moveTask(id, TaskStatus.Today);
     toast.success("Tarefa movida para hoje");

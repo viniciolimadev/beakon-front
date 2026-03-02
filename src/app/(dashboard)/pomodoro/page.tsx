@@ -25,7 +25,7 @@ export default function PomodoroPage() {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 gap-6 lg:grid-cols-3 max-w-5xl transition-all duration-1000",
+        "grid grid-cols-1 gap-6 lg:grid-cols-3 max-w-5xl mx-auto w-full transition-all duration-1000",
       )}
     >
       {/* ── Timer column ──────────────────────────────────────── */}

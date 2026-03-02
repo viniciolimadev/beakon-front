@@ -14,7 +14,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function DashboardPage() {
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 max-w-6xl">
+    <div className="grid grid-cols-1 gap-6 lg:gap-8 lg:grid-cols-3 max-w-7xl mx-auto">
       {/* ── Main column ────────────────────────────────────────── */}
       <div className="lg:col-span-2 space-y-6">
         <DayHeader />

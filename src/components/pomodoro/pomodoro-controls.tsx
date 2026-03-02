@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Play, Pause, Square } from "lucide-react";
+import { Play, Pause, Square, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePomodoroStore } from "@/stores/pomodoroStore";
 import { useTaskStore } from "@/stores/taskStore";
@@ -47,12 +47,12 @@ export function PomodoroControls() {
       {/* Cycle counter */}
       <div className="flex items-center gap-1 text-sm text-muted-foreground">
         {Array.from({ length: config.cyclesUntilLongBreak }).map((_, i) => (
-          <span
+          <div
             key={i}
-            className={i < cyclesCompleted % config.cyclesUntilLongBreak || (cyclesCompleted > 0 && cyclesCompleted % config.cyclesUntilLongBreak === 0) ? "text-base" : "opacity-30 text-base"}
+            className={i < cyclesCompleted % config.cyclesUntilLongBreak || (cyclesCompleted > 0 && cyclesCompleted % config.cyclesUntilLongBreak === 0) ? "text-primary" : "opacity-30 text-primary"}
           >
-            🍅
-          </span>
+            <Timer className="h-4 w-4" />
+          </div>
         ))}
         <span className="ml-1 tabular-nums">
           {cyclesCompleted % config.cyclesUntilLongBreak}/{config.cyclesUntilLongBreak}

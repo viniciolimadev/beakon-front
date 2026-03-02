@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Flame, Zap, LogOut, User } from "lucide-react";
+import { Flame, Zap, LogOut, User, Timer, Pause } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -59,8 +59,8 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 flex h-14 items-center justify-between",
-        "border-b border-border px-6",
+        "sticky top-0 z-40 flex h-16 items-center justify-between",
+        "border-b border-border px-6 lg:px-8",
         "bg-background/80 backdrop-blur-sm"
       )}
     >
@@ -80,7 +80,7 @@ export function Header() {
               "hover:bg-primary/20 transition-colors duration-200"
             )}
           >
-            <span>{isRunning ? "🍅" : "⏸"}</span>
+            <span className="flex items-center justify-center w-4 h-4">{isRunning ? <Timer className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}</span>
             <span className="font-mono tabular-nums" suppressHydrationWarning>
               {formatTime(timeRemaining)}
             </span>
