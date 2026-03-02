@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircle2 } from "lucide-react";
 import { useTaskStore } from "@/stores/taskStore";
 import { TaskStatus } from "@/types";
 
@@ -15,7 +16,7 @@ export function DailyProgress() {
   const allDone = total > 0 && completed === total;
 
   return (
-    <div className="rounded-xl border border-border bg-surface px-4 py-3 space-y-2.5">
+    <div className="rounded-xl border border-border bg-surface p-5 lg:p-6 space-y-2.5">
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">
           {completed} de {total} tarefas concluídas
@@ -41,9 +42,10 @@ export function DailyProgress() {
       </div>
 
       {allDone && (
-        <p className="text-xs text-success text-center">
-          🎉 Todas as tarefas concluídas!
-        </p>
+        <div className="flex items-center justify-center gap-1.5 text-xs text-success mt-2">
+          <CheckCircle2 className="h-4 w-4" />
+          <p>Todas as tarefas concluídas!</p>
+        </div>
       )}
     </div>
   );

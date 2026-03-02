@@ -33,7 +33,7 @@ export default function RoutinesPage() {
   };
 
   return (
-    <div className="space-y-4 max-w-4xl">
+    <div className="space-y-4 max-w-5xl mx-auto w-full">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-0.5 bg-surface rounded-lg p-1 border border-border">
           <ViewButton

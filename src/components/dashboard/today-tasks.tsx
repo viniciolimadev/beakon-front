@@ -77,7 +77,7 @@ export function TodayTasks() {
         return (
           <div
             key={task.id}
-            className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 transition-all hover:border-border/80"
+            className="flex items-center gap-4 rounded-lg border border-border bg-card p-4 lg:p-5 transition-all hover:border-border/80"
           >
             <Button
               variant="ghost"

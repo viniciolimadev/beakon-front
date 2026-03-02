@@ -41,7 +41,7 @@ export function GamificationWidgets() {
   return (
     <div className="space-y-3">
       {/* XP + Level */}
-      <div className="rounded-xl border border-border bg-surface px-4 py-3 space-y-2.5">
+      <div className="rounded-xl border border-border bg-surface p-5 lg:p-6 space-y-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-warning/10">
@@ -68,7 +68,7 @@ export function GamificationWidgets() {
       </div>
 
       {/* Streak */}
-      <div className="rounded-xl border border-border bg-surface px-4 py-3 flex items-center gap-3">
+      <div className="rounded-xl border border-border bg-surface p-5 lg:p-6 flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-danger/10 shrink-0">
           <Flame className="h-4 w-4 text-danger" />
         </div>
@@ -84,9 +84,9 @@ export function GamificationWidgets() {
 
       {/* Last Achievement */}
       {lastAchievement && (
-        <div className="rounded-xl border border-warning/20 bg-warning/5 px-4 py-3 flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-warning/15 shrink-0 text-lg">
-            {lastAchievement.icon ?? "🏆"}
+        <div className="rounded-xl border border-warning/20 bg-warning/5 p-5 lg:p-6 flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-warning/15 shrink-0">
+            {lastAchievement.icon ? <span className="text-lg">{lastAchievement.icon}</span> : <Trophy className="h-5 w-5 text-warning" />}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">

@@ -38,7 +38,7 @@ export function PomodoroSettings() {
       <h3 className="text-sm font-semibold">Configurações</h3>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-1.5">
+        <div className="flex flex-col justify-end gap-1.5">
           <Label htmlFor="focusMinutes">Foco (min)</Label>
           <Input
             id="focusMinutes"
@@ -50,7 +50,7 @@ export function PomodoroSettings() {
           />
         </div>
 
-        <div className="space-y-1.5">
+        <div className="flex flex-col justify-end gap-1.5">
           <Label htmlFor="shortBreak">Pausa curta (min)</Label>
           <Input
             id="shortBreak"
@@ -64,7 +64,7 @@ export function PomodoroSettings() {
           />
         </div>
 
-        <div className="space-y-1.5">
+        <div className="flex flex-col justify-end gap-1.5">
           <Label htmlFor="longBreak">Pausa longa (min)</Label>
           <Input
             id="longBreak"
@@ -78,7 +78,7 @@ export function PomodoroSettings() {
           />
         </div>
 
-        <div className="space-y-1.5">
+        <div className="flex flex-col justify-end gap-1.5">
           <Label htmlFor="cycles">Ciclos até pausa longa</Label>
           <Input
             id="cycles"

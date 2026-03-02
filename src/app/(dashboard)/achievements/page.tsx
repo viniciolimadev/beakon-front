@@ -14,7 +14,7 @@ export default function AchievementsPage() {
   }, [fetchDashboard]);
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl mx-auto w-full">
       <XpLevelBar />
 
       <section className="space-y-3">

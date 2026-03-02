@@ -47,7 +47,7 @@ const EMPTY_STATES: Record<
   [TaskStatus.Done]: {
     Icon: CheckCheck,
     message: "Nenhuma tarefa concluída.",
-    sub: "Comece e volte aqui! 🚀",
+    sub: "Comece e volte aqui!",
   },
 };
 
@@ -75,48 +75,92 @@ export function KanbanColumn({
         </span>
       </div>
 
-      {id === TaskStatus.Inbox && <InboxQuickCapture />}
+      {id === TaskStatus.Inbox ? (
+        <div className="flex flex-col flex-1 h-full min-h-0">
+          <InboxQuickCapture />
+          <div
+            ref={setNodeRef}
+            className={cn(
+              "flex-1 space-y-2 rounded-xl p-2 min-h-[200px] transition-all duration-200",
+              "overflow-y-auto max-h-[calc(100vh-220px)]",
+              isOver
+                ? "bg-primary/5 border border-dashed border-primary/40"
+                : "border border-transparent"
+            )}
+          >
+            <SortableContext
+              items={tasks.map((t) => t.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {tasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onMoveToToday={onMoveToToday}
+                  onPomodoro={onPomodoro}
+                  onComplete={onComplete}
+                />
+              ))}
+            </SortableContext>
 
-      <div
-        ref={setNodeRef}
-        className={cn(
-          "flex-1 space-y-2 rounded-xl p-2 min-h-[200px] transition-all duration-200",
-          "overflow-y-auto max-h-[calc(100vh-220px)]",
-          isOver
-            ? "bg-primary/5 border border-dashed border-primary/40"
-            : "border border-transparent"
-        )}
-      >
-        <SortableContext
-          items={tasks.map((t) => t.id)}
-          strategy={verticalListSortingStrategy}
+            {tasks.length === 0 && (() => {
+              const { Icon, message, sub } = EMPTY_STATES[id];
+              return (
+                <div className="flex flex-col items-center gap-1.5 pt-8 px-2 text-center -translate-y-[40px]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-elevated">
+                    <Icon className="h-5 w-5 text-muted-foreground/40" />
+                  </div>
+                  <p className="text-xs font-medium text-muted-foreground">{message}</p>
+                  {sub && <p className="text-xs text-muted-foreground/50">{sub}</p>}
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      ) : (
+        <div
+          ref={setNodeRef}
+          className={cn(
+            "flex-1 space-y-2 rounded-xl p-2 min-h-[200px] transition-all duration-200",
+            "overflow-y-auto max-h-[calc(100vh-220px)]",
+            isOver
+              ? "bg-primary/5 border border-dashed border-primary/40"
+              : "border border-transparent"
+          )}
         >
-          {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onMoveToToday={onMoveToToday}
-              onPomodoro={onPomodoro}
-              onComplete={onComplete}
-            />
-          ))}
-        </SortableContext>
+          <SortableContext
+            items={tasks.map((t) => t.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {tasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onMoveToToday={onMoveToToday}
+                onPomodoro={onPomodoro}
+                onComplete={onComplete}
+              />
+            ))}
+          </SortableContext>
 
-        {tasks.length === 0 && (() => {
-          const { Icon, message, sub } = EMPTY_STATES[id];
-          return (
-            <div className="flex flex-col items-center gap-1.5 pt-8 px-2 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-elevated">
-                <Icon className="h-5 w-5 text-muted-foreground/40" />
+          {tasks.length === 0 && (() => {
+            const { Icon, message, sub } = EMPTY_STATES[id];
+            return (
+              <div className="flex flex-col items-center gap-1.5 pt-8 px-2 text-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-elevated">
+                  <Icon className="h-5 w-5 text-muted-foreground/40" />
+                </div>
+                <p className="text-xs font-medium text-muted-foreground">{message}</p>
+                {sub && <p className="text-xs text-muted-foreground/50">{sub}</p>}
               </div>
-              <p className="text-xs font-medium text-muted-foreground">{message}</p>
-              {sub && <p className="text-xs text-muted-foreground/50">{sub}</p>}
-            </div>
-          );
-        })()}
-      </div>
+            );
+          })()}
+        </div>
+      )}
     </div>
   );
 }

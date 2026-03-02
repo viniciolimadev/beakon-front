@@ -145,7 +145,7 @@ export function KanbanBoard() {
 
   const handleComplete = (id: string) => {
     moveTask(id, TaskStatus.Done);
-    toast.success("Tarefa concluída! 🎉");
+    toast.success("Tarefa concluída!");
   };
 
   const handleMoveToToday = (id: string) => {
