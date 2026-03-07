@@ -3,6 +3,7 @@ import {
   Routine,
   CreateRoutinePayload,
   UpdateRoutinePayload,
+  Weekday,
 } from "@/types/routine";
 import api from "@/services/api";
 
@@ -16,6 +17,27 @@ interface RoutineState {
   deleteRoutine: (id: string) => Promise<void>;
 }
 
+// Map backend response fields to frontend Routine type
+function mapRoutine(item: {
+  id: string;
+  title: string;
+  timeOfDay: string;
+  daysOfWeek: number[];
+  order: number;
+  isActive: boolean;
+  createdAt?: string;
+}): Routine {
+  return {
+    id: item.id,
+    title: item.title,
+    time: item.timeOfDay,
+    weekdays: item.daysOfWeek as Weekday[],
+    order: item.order,
+    isActive: item.isActive,
+    createdAt: item.createdAt,
+  };
+}
+
 export const useRoutineStore = create<RoutineState>((set, get) => ({
   routines: [],
   isLoading: false,
@@ -23,8 +45,9 @@ export const useRoutineStore = create<RoutineState>((set, get) => ({
   fetchRoutines: async () => {
     set({ isLoading: true });
     try {
-      const res = await api.get<Routine[]>("/api/routines");
-      set({ routines: res.data });
+      const res = await api.get("/api/routines");
+      const items = res.data.data;
+      set({ routines: items.map(mapRoutine) });
     } catch {
       // silently fail
     } finally {
@@ -33,22 +56,32 @@ export const useRoutineStore = create<RoutineState>((set, get) => ({
   },
 
   createRoutine: async (data: CreateRoutinePayload) => {
-    const res = await api.post<Routine>("/api/routines", data);
+    const res = await api.post("/api/routines", {
+      title: data.title,
+      time_of_day: data.time,
+      days_of_week: data.weekdays,
+      order: data.order ?? 0,
+    });
+    const item = mapRoutine(res.data.data);
     set((state) => ({
-      routines: [...state.routines, res.data].sort(
-        (a, b) => a.order - b.order
-      ),
+      routines: [...state.routines, item].sort((a, b) => a.order - b.order),
     }));
   },
 
   updateRoutine: async (id: string, data: UpdateRoutinePayload) => {
+    const routine = get().routines.find((r) => r.id === id);
+    if (!routine) return;
+    // Optimistic update
     set((state) => ({
-      routines: state.routines.map((r) =>
-        r.id === id ? { ...r, ...data } : r
-      ),
+      routines: state.routines.map((r) => (r.id === id ? { ...r, ...data } : r)),
     }));
     try {
-      await api.patch(`/api/routines/${id}`, data);
+      await api.put(`/api/routines/${id}`, {
+        title: data.title ?? routine.title,
+        time_of_day: data.time ?? routine.time,
+        days_of_week: data.weekdays ?? routine.weekdays,
+        order: data.order ?? routine.order,
+      });
     } catch {
       await get().fetchRoutines();
     }
@@ -57,7 +90,17 @@ export const useRoutineStore = create<RoutineState>((set, get) => ({
   toggleActive: async (id: string) => {
     const routine = get().routines.find((r) => r.id === id);
     if (!routine) return;
-    await get().updateRoutine(id, { isActive: !routine.isActive });
+    // Optimistic update
+    set((state) => ({
+      routines: state.routines.map((r) =>
+        r.id === id ? { ...r, isActive: !r.isActive } : r
+      ),
+    }));
+    try {
+      await api.patch(`/api/routines/${id}/toggle`);
+    } catch {
+      await get().fetchRoutines();
+    }
   },
 
   deleteRoutine: async (id: string) => {

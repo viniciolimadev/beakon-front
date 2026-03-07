@@ -62,8 +62,8 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => ({
   start: async (taskId?: string, taskTitle?: string) => {
     const { config } = get();
     try {
-      const res = await api.post<{ id: string }>("/api/pomodoro/start", {
-        taskId,
+      const res = await api.post("/api/pomodoro/start", {
+        task_id: taskId,
         durationMinutes: config.focusMinutes,
       });
       set({
@@ -72,7 +72,7 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => ({
         mode: "focus",
         timeRemaining: config.focusMinutes * 60,
         session: {
-          id: res.data.id,
+          id: res.data.data?.id ?? crypto.randomUUID(),
           taskId,
           taskTitle,
           durationMinutes: config.focusMinutes,

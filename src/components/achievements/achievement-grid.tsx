@@ -88,7 +88,7 @@ export function AchievementGrid() {
 
 function AchievementCard({ achievement }: { achievement: Achievement }) {
   const isUnlocked = !!achievement.unlockedAt;
-  const progress = Math.min(100, Math.round((achievement.progress / achievement.target) * 100));
+  const progress = Math.min(100, Math.round(((achievement.progress ?? 0) / (achievement.target ?? 1)) * 100));
 
   return (
     <div

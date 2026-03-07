@@ -27,7 +27,7 @@ export function DayHeader() {
   const tasks = useTaskStore((s) => s.tasks);
 
   const todayTasks = tasks.filter((t) => t.status === TaskStatus.Today);
-  const focusMinutes = dashboard?.focusMinutesToday ?? 0;
+  const focusMinutes = dashboard?.minutes_focused_today ?? 0;
 
   const firstName = user?.name.split(" ")[0] ?? "você";
 

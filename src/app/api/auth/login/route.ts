@@ -28,15 +28,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(data, { status: apiRes.status });
     }
 
-    const { token, user } = data.data as { token: string; user: unknown };
+    const { access_token: token, user } = data.data as { access_token: string; user: unknown };
 
     const response = NextResponse.json({ user, token });
     response.cookies.set("token", token, COOKIE_OPTIONS);
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: "Internal Server Error in Next.js", details: error.message },
+      { error: "Internal Server Error in Next.js", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

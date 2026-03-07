@@ -7,9 +7,9 @@ export interface Routine {
   weekdays: Weekday[];
   order: number;
   isActive: boolean;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
+  userId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateRoutinePayload {

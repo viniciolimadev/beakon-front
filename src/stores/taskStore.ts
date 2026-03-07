@@ -70,7 +70,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         estimated_minutes: data.estimatedMinutes,
         due_date: data.dueDate,
       };
-      await api.patch(`/api/tasks/${id}`, payload);
+      await api.put(`/api/tasks/${id}`, payload);
     } catch {
       await get().fetchTasks();
     }

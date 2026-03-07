@@ -21,8 +21,16 @@ export function TodayRoutine() {
 
   useEffect(() => {
     api
-      .get<Routine[]>("/api/routines/today")
-      .then((res) => setRoutines(res.data))
+      .get("/api/routines/today")
+      .then((res) => {
+        const items = res.data.data ?? [];
+        setRoutines(
+          items.map((item: { id: string; title: string; timeOfDay: string }) => ({
+            ...item,
+            time: item.timeOfDay,
+          }))
+        );
+      })
       .catch(() => setRoutines([]))
       .finally(() => setIsLoading(false));
   }, []);

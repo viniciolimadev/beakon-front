@@ -24,6 +24,26 @@ function calcLevel(xp: number) {
   return { level, xpToNextLevel };
 }
 
+// Map backend achievement shape to frontend Achievement type
+function mapAchievement(a: {
+  key: string;
+  name: string;
+  description: string;
+  xp_bonus: number;
+  unlocked: boolean;
+  unlocked_at?: string;
+}): Achievement {
+  return {
+    id: a.key,
+    key: a.key,
+    title: a.name,
+    description: a.description,
+    xpReward: a.xp_bonus,
+    unlocked: a.unlocked,
+    unlockedAt: a.unlocked_at,
+  };
+}
+
 export const useGamificationStore = create<GamificationState>((set, get) => ({
   xp: 0,
   level: 1,
@@ -40,21 +60,39 @@ export const useGamificationStore = create<GamificationState>((set, get) => ({
     set({ isLoading: true });
     try {
       const [dashRes, achievRes] = await Promise.all([
-        api.get<DashboardData>("/api/gamification/dashboard"),
-        api.get<Achievement[]>("/api/gamification/achievements"),
+        api.get("/api/gamification/dashboard"),
+        api.get("/api/gamification/achievements"),
       ]);
-      const data = dashRes.data;
-      const { level, xpToNextLevel } = calcLevel(data.xp);
+
+      // Backend wraps all responses in { data: ..., message: '' }
+      const raw: DashboardData = dashRes.data.data;
+      const achievList = achievRes.data.data as Parameters<typeof mapAchievement>[0][];
+
+      const { level, xpToNextLevel } = calcLevel(raw.xp);
+
+      const lastRaw = raw.recent_achievements?.[0] ?? null;
+      const lastAchievement: Achievement | null = lastRaw
+        ? {
+            id: lastRaw.key,
+            key: lastRaw.key,
+            title: lastRaw.name,
+            description: "",
+            xpReward: lastRaw.xp_bonus,
+            unlocked: true,
+            unlockedAt: lastRaw.unlocked_at,
+          }
+        : null;
+
       set({
-        xp: data.xp,
+        xp: raw.xp,
         level,
         xpToNextLevel,
-        streakDays: data.streakDays,
-        streakRecord: data.streakRecord,
-        activeDays: data.activeDays,
-        lastAchievement: data.lastAchievement ?? null,
-        dashboard: data,
-        achievements: achievRes.data,
+        streakDays: raw.streak_days,
+        streakRecord: raw.streak_days,
+        activeDays: [],
+        lastAchievement,
+        dashboard: raw,
+        achievements: achievList.map(mapAchievement),
       });
     } catch {
       // silently fail — keeps existing state

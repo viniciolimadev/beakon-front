@@ -2,6 +2,8 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  createdAt: string;
-  updatedAt: string;
+  xp?: number;
+  streakDays?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }

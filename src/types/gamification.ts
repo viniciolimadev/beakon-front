@@ -3,22 +3,26 @@ export interface Achievement {
   key: string;
   title: string;
   description: string;
-  icon: string;
+  icon?: string;
   xpReward: number;
-  target: number;
-  progress: number;
+  target?: number;
+  progress?: number;
+  unlocked: boolean;
   unlockedAt?: string;
 }
 
+// Shape returned by GET /api/gamification/dashboard
 export interface DashboardData {
   xp: number;
-  level: number;
-  xpToNextLevel: number;
-  streakDays: number;
-  streakRecord: number;
-  activeDays: string[];
-  lastAchievement?: Achievement;
-  focusMinutesToday: number;
-  tasksCompletedToday: number;
-  tasksTotalToday: number;
+  streak_days: number;
+  achievements_unlocked: number;
+  achievements_total: number;
+  tasks_completed_today: number;
+  minutes_focused_today: number;
+  recent_achievements: Array<{
+    key: string;
+    name: string;
+    xp_bonus: number;
+    unlocked_at: string;
+  }>;
 }
